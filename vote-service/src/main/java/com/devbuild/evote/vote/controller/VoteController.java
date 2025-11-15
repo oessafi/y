@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
+import java.util.Collections; // Import ajouté
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +29,13 @@ public class VoteController {
         String cin = body.get("cin");
         String candidate = body.get("candidate");
         if (cin == null || candidate == null) {
-            return ResponseEntity.badRequest().body(Map.of("error", "cin and candidate required"));
+            // Remplacement de Map.of par Collections.singletonMap
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "cin and candidate required"));
         }
 
         Map<String, Object> found = voterClient.findByCin(cin);
         if (found == null || found.isEmpty()) {
-            return ResponseEntity.status(404).body(Map.of("error", "voter not found"));
+            return ResponseEntity.status(404).body(Collections.singletonMap("error", "voter not found"));
         }
 
         // Spring Data REST search returns either a single resource or embedded; try to extract id and hasVoted
@@ -59,11 +61,11 @@ public class VoteController {
         }
 
         if (voterId == null) {
-            return ResponseEntity.status(500).body(Map.of("error", "couldn't resolve voter id"));
+            return ResponseEntity.status(500).body(Collections.singletonMap("error", "couldn't resolve voter id"));
         }
 
         if (Boolean.TRUE.equals(hasVoted)) {
-            return ResponseEntity.status(409).body(Map.of("error", "voter already voted"));
+            return ResponseEntity.status(409).body(Collections.singletonMap("error", "voter already voted"));
         }
 
         Vote vote = new Vote(null, cin, candidate, Instant.now());
@@ -75,7 +77,7 @@ public class VoteController {
         patch.put("hasVoted", true);
         voterClient.patchVoter(voterId, patch);
 
-        return ResponseEntity.ok(Map.of("status", "vote recorded"));
+        return ResponseEntity.ok(Collections.singletonMap("status", "vote recorded"));
     }
 
     @GetMapping

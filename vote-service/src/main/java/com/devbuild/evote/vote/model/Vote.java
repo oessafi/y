@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
+@AllArgsConstructor // Génère déjà le constructeur avec tous les arguments
 @Builder
 public class Vote {
     @Id
@@ -27,10 +27,13 @@ public class Vote {
     @Column(nullable = false)
     private Instant timestamp;
 
+    // SUPPRIMÉ : Le constructeur manuel ci-dessous faisait doublon avec @AllArgsConstructor
+    /*
     public Vote(java.util.UUID id, String cin, String candidate, Instant timestamp) {
         this.id = id;
         this.cin = cin;
         this.candidate = candidate;
         this.timestamp = timestamp;
     }
+    */
 }

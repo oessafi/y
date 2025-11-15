@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 public class ResultController {
@@ -23,13 +22,19 @@ public class ResultController {
 
         Map<String, Long> counts = new HashMap<>();
         for (Map<String, Object> v : votes) {
+            // Conversion sécurisée en String pour la clé
             String candidate = String.valueOf(v.get("candidate"));
             counts.put(candidate, counts.getOrDefault(candidate, 0L) + 1L);
         }
 
         List<Map<String, Object>> result = new ArrayList<>();
         for (Map.Entry<String, Long> e : counts.entrySet()) {
-            result.add(Map.of("candidate", e.getKey(), "totalVotes", e.getValue()));
+            // CORRECTION ICI : On utilise un HashMap classique pour éviter
+            // l'erreur d'inférence de type de Map.of() avec des types mixtes (String et Long).
+            Map<String, Object> map = new HashMap<>();
+            map.put("candidate", e.getKey());
+            map.put("totalVotes", e.getValue());
+            result.add(map);
         }
 
         return result;
