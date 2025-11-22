@@ -4,22 +4,28 @@ spring:
   application:
     name: vote-service
   datasource:
-    url: jdbc:h2:mem:votes;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    # Connexion à localhost (votre machine)
+    url: jdbc:postgresql://localhost:5432/vote_db
+    # Mettez VOS identifiants PostgreSQL locaux ici :
+    username: postgres
+    password: omar123
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-    register-with-eureka: true
-    fetch-registry: true
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+feign:
+  httpclient:
+    enabled: true
+
+logging:
+  level:
+    feign: DEBUG
+    org.apache.http: DEBUG

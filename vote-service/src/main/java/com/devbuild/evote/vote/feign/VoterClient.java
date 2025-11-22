@@ -1,12 +1,12 @@
 package com.devbuild.evote.vote.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@FeignClient(name = "voter-service")
+// Explicit URL to avoid local DNS issues on Windows
+@FeignClient(name = "voter-service", url = "http://localhost:9101")
 public interface VoterClient {
 
     @GetMapping("/api/voters/search/findByCin")
